@@ -9,6 +9,8 @@ import br.com.alura.screenmatch.service.ConverteDados;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +27,7 @@ public class Principal {
     private final String ENDERECO = "https://omdbapi.com/?t=";
     private final String API_KEY = "&apikey=6585022c";
 
-    public void exibeMenu(){
+    public void exibeMenu() {
         System.out.println("Digite o nome da série para busca: ");
         var nomeSerie = leitura.nextLine();
         String nomeFormatado = URLEncoder.encode(nomeSerie, StandardCharsets.UTF_8);
@@ -36,7 +38,7 @@ public class Principal {
 
         //lista temporadas
         List<DadosTemporada> temporadas = new ArrayList<>();
-        for(int i = 1; i <= dados.totalTemporadas(); i++) {
+        for (int i = 1; i <= dados.totalTemporadas(); i++) {
             json = consumo.obterDados(ENDERECO + nomeFormatado + "&season=" + i + API_KEY);
             DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
             temporadas.add(dadosTemporada);
@@ -65,6 +67,22 @@ public class Principal {
                 ).collect(Collectors.toList());
         episodios.forEach(System.out::println);
 
+
+        //busca personalizada
+        System.out.println("A partir de que ano você deseja ver os episódios? ");
+        var ano = leitura.nextInt();
+        leitura.nextLine();
+
+        LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        episodios.stream()
+                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+                .forEach(e -> System.out.println(
+                        "Temporada: " + e.getTemporada() +
+                                " Episódio: " + e.getTitulo() +
+                                " Data lançamento: " + e.getDataLancamento().format(formatador)
+                ));
 
     }
 
