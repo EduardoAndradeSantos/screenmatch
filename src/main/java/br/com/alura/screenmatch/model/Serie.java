@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.OptionalDouble;
 
 @Entity
-@Table
+@Table(name = "series")
 public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @Transient //não persiste os dados de espisodio
+    @OneToMany(mappedBy = "serie")
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(){} //construtor padrão obrigatório para usar jpa
