@@ -1,12 +1,25 @@
 package br.com.alura.screenmatch.model;
 
+import jakarta.persistence.*;
+
 import java.util.OptionalDouble;
 
+@Entity
+@Table
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String titulo;
+
     private Integer totalTemporadas;
     private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
+
     private String atores;
     private String poster;
     private String sinopse;
